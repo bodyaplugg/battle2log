@@ -6,7 +6,7 @@ const express = require('express'),
       fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 app.set('view engine', 'ejs');
-const port = 5000;
+const port = process.env.PORT || 3000;
 
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
