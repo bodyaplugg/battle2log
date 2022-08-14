@@ -1,0 +1,250 @@
+@font-face {
+font-family: 'Purista';
+src: url('/assets/fonts/Purista-Bold.woff2') format('woff2'),
+     url('/assets/fonts/Purista-Bold.woff') format('woff');
+}
+
+.pCursor {
+  cursor: pointer;
+}
+
+.loaderArea {
+  background: white;
+  overflow: hidden;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right:0;
+  bottom:0;
+  z-index: 100000;
+}
+.loader {
+  height: 40px;
+  width: 40px;
+  position: absolute;
+  left: 50%;
+  margin-left: -20px;
+  top: 50%;
+  margin-top: -20px;
+}
+body {
+  background: #2f2f2f no-repeat center top fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.bg-red {
+  background: #a90101;
+}
+
+.text-red {
+  color: #a90101;
+}
+
+.text {
+  background-color: rgba(0,0,0,0.65);
+  color: white;
+  font-weight: 550;
+  padding: 0.5%;
+  margin: 1% 0 1% 0;
+}
+
+.nickname {
+  background-color: rgba(0,0,0,0.55);
+  color: white;
+  font-weight: 550;
+  font-family: 'Purista';
+  margin-top: 0.5%;
+  margin-bottom: 0.5%;
+}
+
+.server {
+  background-color: rgba(0,0,0,0.55);
+  color: white;
+  font-weight: 550;
+  margin-top: 0.5%;
+  margin-bottom: 0.5%;
+}
+
+.title {
+  background-color: rgba(0,0,0,0.65);
+  color: white;
+}
+
+.align-right {
+  text-align: right;
+}
+.table-bg {
+  background: #171717;
+}
+.table-head-bg {
+  background: #101010;
+}
+
+.text-sm {
+  font-size: 60%
+}
+
+html {
+    overflow-y: scroll;
+}
+html::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgba(26, 24, 47, 0.15);
+    border-radius: 5px;
+    height: 200px;
+    position: absolute;
+}
+
+html::-webkit-scrollbar-thumb {
+    background: #4a4949;
+    border-radius: 5px;
+    position: absolute;
+}
+
+.scrollbar {
+    overflow-y: scroll;
+}
+.scrollbar::-webkit-scrollbar {
+    width: 10px;
+    background-color: rgba(26, 24, 47, 0.15);
+    border-radius: 5px;
+    position: absolute;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+    background: #4a4949;
+    border-radius: 5px;
+    position: absolute;
+}
+
+.nav-link-lb {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: rgb(224 2 2);
+    text-decoration: none;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+
+element.style {
+}
+.nav-lb {
+    --bs-nav-link-padding-x: 1rem;
+    --bs-nav-link-padding-y: 0.5rem;
+    --bs-nav-link-font-weight: ;
+    --bs-nav-link-color: rgb(253 13 13);
+    --bs-nav-link-hover-color: rgb(255 0 0);
+    --bs-nav-link-disabled-color: rgb(108 117 125);
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.nav-tabs-lb {
+    --bs-nav-tabs-border-width: 1px;
+    --bs-nav-tabs-border-color: rgb(14 14 14);
+    --bs-nav-tabs-border-radius: 0.375rem;
+    --bs-nav-tabs-link-hover-border-color: rgb(14 14 14) rgb(14 14 14);
+    --bs-nav-tabs-link-active-color: rgb(73 80 87);
+    --bs-nav-tabs-link-active-bg: rgb(14 14 14 / 0%);
+    --bs-nav-tabs-link-active-border-color: rgb(14 14 14) rgb(14 14 14);
+    border-bottom: var(--bs-nav-tabs-border-width) solid var(--bs-nav-tabs-border-color);
+}
+
+element.style {
+}
+.nav-tabs-lb .nav-item-lb .show .nav-link-lb, .nav-tabs-lb .nav-link-lb .active {
+    color: rgb(255 255 255);
+    /* background-color: var(--bs-nav-tabs-link-active-bg); */
+    /* border-color: var(--bs-nav-tabs-link-active-border-color); */
+}
+.nav-tabs-lb .nav-link-lb {
+    margin-bottom: calc(var(--bs-nav-tabs-border-width) * -1);
+    background: 0 0;
+    border: var(--bs-nav-tabs-border-width) solid rgb(255 254 254 / 0%);
+    border-top-left-radius: var(--bs-nav-tabs-border-radius);
+    border-top-right-radius: var(--bs-nav-tabs-border-radius);
+}
+[type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+    cursor: pointer;
+}
+.nav-link-lb {
+    display: block;
+    padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: rgb(224 2 2);
+    text-decoration: none;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.nav-lb {
+    --bs-nav-link-padding-x: 1rem;
+    --bs-nav-link-padding-y: 0.5rem;
+    --bs-nav-link-font-weight: ;
+    --bs-nav-link-color: rgb(253 13 13);
+    --bs-nav-link-hover-color: rgb(255 0 0);
+    --bs-nav-link-disabled-color: rgb(108 117 125);
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+
+.pagination-red {
+    --bs-pagination-padding-x: 0.75rem;
+    --bs-pagination-padding-y: 0.375rem;
+    --bs-pagination-font-size: 1rem;
+    --bs-pagination-color: #a90101;
+    --bs-pagination-bg: #171717;
+    --bs-pagination-border-width: 1px;
+    --bs-pagination-border-color: #0e0e0e;
+    --bs-pagination-border-radius: 0.375rem;
+    --bs-pagination-hover-color: #a90101;
+    --bs-pagination-hover-bg: #0c0c0c);
+    --bs-pagination-hover-border-color: #0e0e0e;
+    --bs-pagination-focus-color: #a90101;
+    --bs-pagination-focus-bg: #0c0c0c;
+    --bs-pagination-focus-box-shadow: 0 0 0 0.25rem #0e0e0e;
+    --bs-pagination-active-color: #0e0e0e;
+    --bs-pagination-active-bg: #a90101;
+    --bs-pagination-active-border-color: #0e0e0e;
+    --bs-pagination-disabled-color: black;
+    --bs-pagination-disabled-bg: black;
+    --bs-pagination-disabled-border-color: #0e0e0e;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+
+a:hover {
+    color: #940000;
+    text-decoration: underline;
+}
+
+.page-link-red {
+    position: relative;
+    display: block;
+    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+    font-size: var(--bs-pagination-font-size);
+    color: var(--bs-pagination-color);
+    text-decoration: none;
+    background-color: var(--bs-pagination-bg);
+    border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.active>.page-link-red, .page-link.active {
+    z-index: 3;
+    color: var(--bs-pagination-active-color);
+    background-color: var(--bs-pagination-active-bg);
+    border-color: var(--bs-pagination-active-border-color);
+}

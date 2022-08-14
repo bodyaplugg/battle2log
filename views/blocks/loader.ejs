@@ -1,0 +1,13 @@
+<div style="background: #2f2f2f no-repeat center top fixed;" class="loaderArea">
+    <div class="loader spinner-border text-red preloader" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+</div>
+<script>
+  $(window).on('load', function () {
+    $preloader = $('.loaderArea'),
+      $loader = $preloader.find('.loader');
+    $loader.fadeOut();
+    $preloader.delay(350).fadeOut('slow');
+  });
+</script>

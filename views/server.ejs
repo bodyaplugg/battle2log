@@ -1,0 +1,178 @@
+<%
+function parseMode(mode) {
+  if (mode == 'gpm_cq') return '(Conquest)'
+  else if (mode == 'gpm_coop') return '(Co-op)'
+}
+
+function parsePlayers(server, team) {
+  for (var i = 0; i < server.players.length; i++) {
+    if (server.players[i].team == team) {%>
+      <tr>
+        <td><a <% if (!server.players[i].aibot) {%>href="/profile/?pid=<%=server.players[i].pid%>" <%}%> class="my-2 text-decoration-none link-light col-auto" ><%=server.players[i].tag + server.players[i].name%></a><%if(server.players[i].aibot) {%><div class="rounded-pill badge bg-red" >БОТ</div><%}%><span id="pid<%=server.players[i].pid%>"></span></td>
+        <td><%=server.players[i].score%></td>
+        <td><%=server.players[i].kills%></td>
+        <td><%=server.players[i].deaths%></td>
+        <td><%=server.players[i].ping%></td>
+      </tr>
+    <%}
+  }
+}
+function parseTeam(team) {
+  if(team == 'CH') {%>
+    PLA<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ch.png"/>
+  <%} else if(team == 'Chinsurgent') {%>
+    Rebel Forces<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/Chinsurgent.png"/>
+  <%} else if(team == 'EU') {%>
+    EU<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/eu.png"/>
+  <%} else if(team == 'MEC') {%>
+    MEC<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/mec.png"/>
+  <%} else if(team == 'MECSF') {%>
+    MEC SF<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/mecsf.png"/>
+  <%} else if(team == 'MEInsurgent') {%>
+    Insurgent Force<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/meinsurgent.png"/>
+  <%} else if(team == 'SAS') {%>
+    SAS<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/sas.png"/>
+  <%} else if(team == 'SEAL') {%>
+    SEAL<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/seal.png"/>
+  <%} else if(team == 'Spetz') {%>
+    RU<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/spetz.png"/>
+  <%} else if(team == 'US') {%>
+    USMC<img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/us.png"/>
+  <%} else {%>
+    <%=team%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/unknown.png"/>
+  <%}
+}
+%>
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <%- include('blocks/head') %>
+    <title><%=server.name%> - Battle2log</title>
+    <script type="text/babel">
+      var friends = localStorage.getItem('friends');
+      friends = JSON.parse(friends);
+      if (!Array.isArray(friends)) friends = []
+      if (friends) {
+        for (var i = 0; i < friends.length; i++) {
+          const player = document.getElementById('pid' + friends[i][1]);
+          if (player) ReactDOM.render(<i class="bi bi-people-fill text-info"></i>, player);
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <%- include('blocks/header')%>
+    <%- include('blocks/loader') %>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+         <div class="container-fluid">
+          <div class="my-2 server row">
+            <div class="col-12 col-lg-8 row align-items-center">
+              <p class="mb-1 text-decoration-none link-light col-12 fs-3 mr-2"><%=server.name%><span class=" rounded-pill badge bg-red"><%=server.numPlayers%>/<%=server.maxPlayers%></span></p>
+              <h4 class="mb-1 text-decoration-none link-light col-12"><%=server.sponsorText%></h4>
+              <h5 class="col-12">Карта: <%=server.mapName%><%=parseMode(server.gameType)%></h5>
+              <h6 class="col-12"><%=server.ip + ':' + server.port%></h6>
+              <div class="row align-items-center mb-2">
+                <img class="bd-placeholder-img col-auto" width="16" height="16" src="/assets/img/<%if (!server.ranked) {%>un<%}%>ranked.png"/>
+                <%if (server.anticheat) {%><img class="bd-placeholder-img col-auto" width="16" height="16" src="/assets/img/pb.png"/><%}%>
+                <i class="mx-1 bi bi-<%if (!server.password) {%>un<%}%>lock-fill col-auto d-flex"></i>
+                <i class="mx-1 bi bi-mic-<%if (!server.voip) {%>mute-<%}%>fill col-auto d-flex"></i>
+                <i class="mx-1 bi bi-camera-video-<%if (!server.battlerecorder) {%>off-<%}%>fill col-auto d-flex"></i>
+              </div>
+            </div>
+            <div class="col-12 col-lg-4 row py-3">
+              <div class="fs-4 align-items-center">
+                <a href="<%=server.joinLink%>" class="my-2 col-auto btn btn-success <%if (!server.joinLink) {%>disabled<%}%>"><i class="mx-1 bi bi-play-fill"></i>Присоединиться</a>
+                <a target="_blank" href="<%=server.demoIndex%>" class="my-2 col-auto btn btn-success <%if (!server.demoIndex || server.demoIndex == 'http://' || server.demoIndex == 'https://') {%>disabled<%}%>"><i class="mx-1 bi bi-camera-video-fill"></i>Демо</a>
+                <a id="fav" class="my-2 col-auto align-items-center"></a>
+                <script type="text/babel">
+                  const fav = document.getElementById('fav');
+                  class Favorite extends React.Component {
+                    constructor(props) {
+                      super(props);
+                      var serversIndex = '-', favServers = localStorage.getItem('favServers');
+                      favServers = JSON.parse(favServers);
+                      if (favServers) for (var i = 0; i < favServers.length; i++) if (favServers[i] == '<%=server.ip + ':' + server.port%>') serversIndex = i;
+                      if (serversIndex == '-') {
+                        this.state = {value: 'pCursor text-warning mx-1 bi bi-star'};
+                      }
+                      else {
+                        this.state = {value: 'pCursor text-warning mx-1 bi bi-star-fill'};
+                      }
+                      this.handleClick = this.handleClick.bind(this);
+                    }
+
+                    handleClick() {
+                      var serversIndex = '-', favServers = localStorage.getItem('favServers');
+                      favServers = JSON.parse(favServers);
+                      if (!Array.isArray(favServers)) favServers = []
+                      for (var i = 0; i < favServers.length; i++)
+                        if (favServers[i] == '<%=server.ip + ':' + server.port%>') serversIndex = i;
+                      if (serversIndex == '-') {
+                        favServers[favServers.length] = '<%=server.ip + ':' + server.port%>'
+                        localStorage.setItem('favServers', JSON.stringify(favServers));
+                        this.setState(state => ({value: 'pCursor text-warning mx-1 bi bi-star-fill'}));
+                      }
+                      else {
+                        favServers.splice(serversIndex, 1);
+                        localStorage.setItem('favServers', JSON.stringify(favServers));
+                        this.setState(state => ({value: 'pCursor text-warning mx-1 bi bi-star'}));
+                      }
+                    }
+                    render() {
+                      return <i onClick={this.handleClick} className={this.state.value}></i>;
+                    }
+                  }
+                  ReactDOM.render(<Favorite/>, fav);
+                </script>
+                <img class="col-auto img-fluid" src="<%=server.sponsorLogoUrl%>"/>
+              </div>
+            </div>
+          </div>
+         </div>
+        </div>
+        <div class="col-12">
+          <div class="container-fluid">
+            <div class="row server pt-2">
+              <div class="col-12 col-lg-6">
+                <h2><%=parseTeam(server.team1)%></h2>
+                <table class="table table-sm text-light table-bg">
+                <thead class="table-head-bg">
+                <tr>
+                  <th scope="col"><div class="d-none d-lg-flex">Ник</div></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Очки</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/score.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Убийств</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/kills.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Смертей</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/deaths.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Пинг</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ping.png"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%=parsePlayers(server, 1)%>
+                </tbody>
+                </table>
+              </div>
+              <div class="col-12 col-lg-6">
+                <h2><%=parseTeam(server.team2)%></h2>
+                <table class="table table-sm text-light table-bg">
+                <thead class="table-head-bg">
+                <tr>
+                  <th scope="col"><div class="d-none d-lg-flex">Ник</div></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Очки</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/score.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Убийств</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/kills.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Смертей</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/deaths.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex">Пинг</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ping.png"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <%=parsePlayers(server, 2)%>
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,84 @@
+<%
+function parseServers(servers, page, pages) {
+ for(var i = (page * 50 - 50); i < (page * 50); i++) {
+   if(servers[i]) {%>
+    <div class="col-12">
+      <div class="container-fluid">
+        <div class="server row overflow-hidden flex-nowrap align-items-center">
+          <div class=" col-auto">
+            <span class="mx-1 rounded-pill badge bg-red d-flex"><%=servers[i].numPlayers%>/<%=servers[i].maxPlayers%></span>
+          </div>
+          <img class="bd-placeholder-img col-auto mt-2 d-none d-sm-flex" width="16" height="16" src="/assets/img/<%if (!servers[i].ranked) {%>un<%}%>ranked.png"/>
+          <i class="d-none d-lg-flex mx-1 bi bi-<%if (!servers[i].password) {%>un<%}%>lock-fill col-auto d-flex"></i>
+          <i class="d-none d-lg-flex mx-1 bi bi-mic-<%if (!servers[i].voip) {%>mute-<%}%>fill col-auto d-flex"></i>
+          <div class="col-auto">
+            <a href="/server/?ip=<%=servers[i].ip%>&port=<%=servers[i].port%>" class="my-2 text-decoration-none link-light col-auto" ><p class="text-nowrap text-truncate fs-3"><%=servers[i].name%></p></a>
+            <h6>Карта: <%=servers[i].mapName%><%=parseMode(servers[i].gameType)%></h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  <%}
+  }
+}
+
+function parseMode(mode) {
+  if (mode == 'gpm_cq') return '(Conquest)'
+  else if (mode == 'gpm_coop') return '(Co-op)'
+  return
+}
+
+function parsePagination(pages, page) {
+  %>
+  <nav>
+    <ul class="pagination-red">
+      <li class="page-item">
+        <a class="page-link-red <%if (page == 1) {%> disabled<%}%>" href="/servers/?page=<%if (page != 1) {%><%=Number(page) - 1%><%}%>" aria-label="Previous">
+          <span aria-hidden="true">«</span>
+        </a>
+      </li>
+      <%for (var i = 0; i < pages; i ++) {%>
+      <li class="page-item <%if (i + 1 == page) {%>active<%}%>"><a class="page-link-red" href="/servers/?page=<%=i + 1%>"><%=i + 1%></a></li>
+      <% }%>
+      <li class="page-item">
+        <a class="page-link-red <%if (page == pages) {%> disabled<%}%>" href="/servers/?page=<%if (page != pages) {%><%=Number(page) + 1%><%}%>" aria-label="Next">
+          <span aria-hidden="true">»</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <%
+}
+
+%>
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <%- include('blocks/head') %>
+    <title>Список серверов - Battle2log</title>
+  </head>
+  <body>
+    <%- include('blocks/header')%>
+    <%- include('blocks/loader') %>
+    <div class="container-fluid">
+      <div class="row col-auto">
+        <div class="col-12">
+         <h1 class="text">Список серверов: </h1>
+        </div>
+        <%parsePagination(pages, page)%>
+        <div class="col-auto">
+          <select class="decorated bg-dark text-light" onchange="if (this.value) window.location.href = this.value">
+              <option <%if (sort == "playersup") {%> selected <%}%>value="/servers/?page=<%=page%>&sort=playersup">Игроки▲</option>
+              <option <%if (sort == "playersdown") {%> selected <%}%>value="/servers/?page=<%=page%>&sort=playersdown">Игроки▼</option>
+              <option <%if (sort == "nameup") {%> selected <%}%>value="/servers/?page=<%=page%>&sort=nameup">Название▲</option>
+              <option <%if (sort == "namedown") {%> selected <%}%>value="/servers/?page=<%=page%>&sort=namedown">Название▼</option>
+              <option <%if (sort == "mapup") {%> selected <%}%>value="/servers/?page=<%=page%>&sort=mapup">Карта▲</option>
+              <option <%if (sort == "mapdown") {%> selected <%}%>value="/servers/?page=<%=page%>&sort=mapdown">Карта▼</option>
+          </select>
+        </div>
+        <%parseServers(servers, page, pages)%>
+        <%parsePagination(pages, page)%>
+      </div>
+    </div>
+  </body>
+</html>

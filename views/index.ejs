@@ -1,0 +1,272 @@
+<%
+function parseServers(servers) {
+ for(var i = 0; i < 10; i++) {
+   if(servers[i]) {%>
+    <div class="col-12">
+      <div class="container-fluid">
+        <div class="server row overflow-hidden flex-nowrap align-items-center">
+          <div class=" col-auto">
+            <span class="mx-1 rounded-pill badge bg-red d-flex"><%=servers[i].numPlayers%>/<%=servers[i].maxPlayers%></span>
+          </div>
+          <img class="bd-placeholder-img col-auto mt-2 d-none d-sm-flex" width="16" height="16" src="/assets/img/<%if (!servers[i].ranked) {%>un<%}%>ranked.png"/>
+          <i class="d-none d-lg-flex mx-1 bi bi-<%if (!servers[i].password) {%>un<%}%>lock-fill col-auto d-flex"></i>
+          <i class="d-none d-lg-flex mx-1 bi bi-mic-<%if (!servers[i].voip) {%>mute-<%}%>fill col-auto d-flex"></i>
+          <div class="col-auto">
+            <a href="/server/?ip=<%=servers[i].ip%>&port=<%=servers[i].port%>" class="my-2 text-decoration-none link-light col-auto" ><p class="text-nowrap text-truncate fs-3"><%=servers[i].name%></p></a>
+            <h6>Карта: <%=servers[i].mapName%><%=parseMode(servers[i].gameType)%></h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  <%}
+  }
+}
+
+function parseMode(mode) {
+  if (mode == 'gpm_cq') return '(Conquest)'
+  else if (mode == 'gpm_coop') return '(Co-op)'
+  return
+}
+%>
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <%- include('blocks/head') %>
+    <script src="/js/feather.min.js"></script>
+    <script src="/js/Chart.min.js"></script>
+    <title>Battle2log</title>
+  </head>
+  <body>
+    <%- include('blocks/header') %>
+    <%- include('blocks/loader') %>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 pt-2">
+          <div class="text-light title p-2">
+            <h1>Популярные сервера:</h1>
+            <div class="col-12">
+              <div style="height:250px;" class="overflow-auto scrollbar">
+                <%parseServers(servers)%>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6 pt-2">
+          <div class="text-light title p-2">
+            <h1>Избранные сервера:</h1>
+            <div class="col-12">
+              <div id="favservers" style="height:250px;" class="overflow-auto scrollbar">
+              </div>
+              <script type="text/babel">
+                const fav = document.getElementById('favservers');
+                var serversIndex = '-', favServers = localStorage.getItem('favServers');
+                favServers = JSON.parse(favServers);
+                if (!Array.isArray(favServers)) favServers = []
+                var element = '';
+                class Server extends React.Component {
+                  constructor(props) {
+                    super(props);
+                    this.state = {value: null};
+                  }
+
+                  componentDidMount() {
+                    fetch("https://api.bflist.io/bf2/v1/servers/" + this.props.ip)
+                      .then(res => res.json())
+                      .then(
+                        (result) => {
+                          if (!result.errors) {
+                            this.setState({
+                              element: <div className="col-12">
+                                  <div className="container-fluid">
+                                    <div className="server row overflow-hidden flex-nowrap align-items-center">
+                                      <i class="col-auto text-success bi bi-circle-fill"></i>
+                                      <div className="col-auto">
+                                        <span className="mx-1 rounded-pill badge bg-red d-flex">{result.numPlayers}/{result.maxPlayers}</span>
+                                      </div>
+                                      <div className="col-auto">
+                                        <a href={"/server/?ip=" + result.ip + "&port=" + result.port} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{result.name}</p></a>
+                                        <h6>Карта: {result.mapName}{(result.gameType == 'gpm_cq') ? '(Conquest)' : '(Co-op)'}</h6>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>,
+                            });
+                          } else {
+                            this.setState({
+                              element: <div className="col-12">
+                                  <div className="container-fluid">
+                                    <div className="server row overflow-hidden flex-nowrap align-items-center">
+                                      <i class="col-auto text-danger bi bi-circle-fill"></i>
+                                      <div className="col-auto">
+                                        <span className="mx-1 rounded-pill badge bg-red d-flex">0/0</span>
+                                      </div>
+                                      <div className="col-auto">
+                                        <a className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{this.props.ip}</p></a>
+                                        <h6>Карта: -</h6>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>,
+                            });
+                          }
+                        },
+                      ).catch((errors) => {
+                        console.log('error')
+                      })
+                  }
+                  render() {
+                    return <div>{this.state.element}</div>
+                  }
+                }
+                var favServers = localStorage.getItem('favServers');
+                favServers = JSON.parse(favServers);
+                if (!Array.isArray(favServers)) favServers = []
+                const listItems = favServers.map((count) =>
+                  <Server ip={count}/>
+                );
+                ReactDOM.render(<div>{listItems}</div>, fav);
+              </script>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-lg-6 pt-2">
+          <div class="text-light title p-2">
+            <h1>Друзья:</h1>
+            <div class="col-12">
+              <div id="friends" style="height:250px;" class="overflow-auto scrollbar">
+              </div>
+              <script type="text/babel">
+                const root = document.getElementById('friends');
+                class Friend extends React.Component {
+                  constructor(props) {
+                    super(props);
+                    this.state = {value: null};
+                  }
+
+                  componentDidMount() {
+                    fetch("https://api.bflist.io/bf2/v1/players/" + this.props.name)
+                      .then(res => res.json())
+                      .then(
+                        (result) => {
+                          fetch("https://api.bflist.io/bf2/v1/players/" + this.props.name + '/server')
+                            .then(res => res.json())
+                            .then(
+                              (server) => {
+                                if (!result.errors && result.pid == this.props.pid) {
+                                  this.setState({
+                                    element: <div className="col-12">
+                                        <div className="container-fluid">
+                                          <div className="server row overflow-hidden flex-nowrap align-items-center">
+                                            <i class="col-auto text-success bi bi-circle-fill"></i>
+                                            <div className="col-auto">
+                                              <a href={"/profile/?pid=" + this.props.pid + "&platform=" + this.props.platform} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{result.name}</p></a>
+                                              <a href={"/server/?ip=" + server.ip + "&port=" + server.port} className="my-2 text-decoration-none link-light col-auto" ><h6>Сервер: {server.name}</h6></a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>,
+                                  });
+                                } else {
+                                  this.setState({
+                                    element: <div className="col-12">
+                                        <div className="container-fluid">
+                                          <div className="server row overflow-hidden flex-nowrap align-items-center">
+                                            <i class="col-auto text-danger bi bi-circle-fill"></i>
+                                            <div className="col-auto">
+                                              <a href={"/profile/?pid=" + this.props.pid + "&platform=" + this.props.platform} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{this.props.name}</p></a>
+                                              <a href={"/server/?ip=" + server.ip + "&port=" + server.port} className="my-2 text-decoration-none link-light col-auto" ><h6>Сервер: -</h6></a>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>,
+                                  });
+                                }
+                              },
+                         )
+                        },
+                      )
+                  }
+                  render() {
+                    return <div>{this.state.element}</div>
+                  }
+                }
+                var friends = localStorage.getItem('friends');
+                friends = JSON.parse(friends);
+                if (!Array.isArray(friends)) friends = []
+                const listItems = friends.map((count) =>
+                  <Friend name={count[0]} pid={count[1]} platform={count[2]}/>
+                );
+                ReactDOM.render(<div>{listItems}</div>, root);
+              </script>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 py-2">
+          <div class="text-light title p-2">
+            <h1>График игроков в сети: </h1>
+            <div class="col-12">
+              <canvas class="my-4 w-100 chartjs-render-monitor" id="players" width="420" height="150" style="display: block; width: 555px; height: 234px;"></canvas>
+              <script>
+
+              (() => {
+                'use strict'
+
+                feather.replace({ 'aria-hidden': 'true' })
+                function parseDate(date) {
+                  var day = (date.getDate() > 9) ? date.getDate() : '0' + date.getDate();
+                  var month = (date.getMonth() > 9) ? date.getMonth() + 1 : '0' + (date.getMonth() + 1);
+                  return day + '.' + month
+                }
+
+                const ctx = document.getElementById('players')
+                const myChart = new Chart(ctx, {
+                  type: 'line',
+                  data: {
+                    labels: [
+                      parseDate(new Date(Date.now() - 86400000 * 6)),
+                      parseDate(new Date(Date.now() - 86400000 * 5)),
+                      parseDate(new Date(Date.now() - 86400000 * 4)),
+                      parseDate(new Date(Date.now() - 86400000 * 3)),
+                      parseDate(new Date(Date.now() - 86400000 * 2)),
+                      parseDate(new Date(Date.now() - 86400000 * 1)),
+                      parseDate(new Date(Date.now() - 86400000 * 0))
+                    ],
+                    datasets: [{
+                      data: [
+                        <%=soldierAmount[6]%>,
+                        <%=soldierAmount[5]%>,
+                        <%=soldierAmount[4]%>,
+                        <%=soldierAmount[3]%>,
+                        <%=soldierAmount[2]%>,
+                        <%=soldierAmount[1]%>,
+                        <%=soldierAmount[0]%>
+                      ],
+                      lineTension: 0,
+                      backgroundColor: 'transparent',
+                      borderColor: '#a90101',
+                      borderWidth: 4,
+                      pointBackgroundColor: '#a90101'
+                    }]
+                  },
+                  options: {
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          beginAtZero: false
+                        }
+                      }]
+                    },
+                    legend: {
+                      display: false
+                    }
+                  }
+                })
+              })()
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

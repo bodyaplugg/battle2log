@@ -1,0 +1,1472 @@
+<%
+  function parseTime(timestamp) {
+      var time = Number(timestamp)
+      var hours = Math.floor(time / 60 / 60)
+      var minutes = Math.floor(time / 60) - (hours * 60)
+      if (minutes < 10)
+        minutes = String(0) + minutes;
+      var seconds = time - (hours * 60 * 60 + minutes * 60)
+      if (seconds < 10)
+        seconds = String(0) + seconds;
+      return hours + ':' + minutes + ':' + seconds
+  }
+
+  function parseDate(timestamp) {
+    var joinDate = new Date(Number(timestamp) * 1000);
+
+    var day = joinDate.getDate()
+    if (day < 10)
+      day = String(0) + day;
+
+    var month = joinDate.getMonth() + 1
+    if (month < 10)
+      month = String(0) + month;
+
+
+    var hours = joinDate.getHours()
+    if (hours < 10)
+      hours = String(0) + hours;
+
+    var minutes = joinDate.getMinutes()
+    if (minutes < 10)
+      minutes = String(0) + minutes;
+
+    var year = joinDate.getFullYear()
+    return day + '-' + month + '-' + year + ' ' + hours + ':' + minutes
+  }
+
+  function parseLevel(level) {
+    if (level == 3) {
+      return 'Эксперт'
+    } else if (level == 2) {
+      return 'Ветеран'
+    } else {
+      return 'Базовый'
+    }
+  }
+
+  function parseWeapon(id) {
+    if (id == '11') {
+      return 'DAO-12'
+    } else if (id == '22') {
+      return 'G3A3'
+    } else if (id == '33') {
+      return 'MK3A1'
+    } else if (id == '44') {
+      return 'L85A1'
+    } else if (id == '55') {
+      return 'G36C'
+    } else if (id == '66') {
+      return 'PKM'
+    } else if (id == '77') {
+      return 'M95'
+    } else if (id == '444') {
+      return 'P90'
+    } else if (id == '88') {
+      return 'FN2000'
+    } else if (id == '99') {
+      return 'MP7'
+    } else if (id == '111') {
+      return 'G36E'
+    } else if (id == '222') {
+      return 'SCAR-L'
+    } else if (id == '333') {
+      return 'MG36'
+    } else if (id == '555') {
+      return 'L96A1'
+    }
+  }
+
+  function findLevel(id, awards) {
+    var level = 0
+    for (var i = 0; i < awards.length; i++) {
+      if (awards[i].award == id)
+        level = awards[i].level
+    }
+    return level
+  }
+
+  function parseBadge(id, awards) {
+    if (awards) {
+    for (var i = 0; i < awards.length; i++) {
+      if (awards[i].award == id) {
+        var level = findLevel(id, awards);
+        %> <%=parseLevel(level)%>
+           <div class="img_award awl1_<%=level%> awi<%=id%>"></div>
+           <%=parseDate(awards[i].when)%>
+           <br />
+        <%
+        return
+      }
+    }
+    }
+    %> -
+       <div class="img_award awl1_0 awi<%=id%>"></div>
+       <br />
+    <%
+  }
+    function parseUnlock(id, unlocks) {
+      for (var i = 0; i < unlocks.length; i++) {
+        if (unlocks[i].id == id && unlocks[i].state == "s"){
+          %>
+             <div class="img_unlock ull_1 uli<%=unlocks[i].id%>"></div>
+             <%=parseWeapon(id)%>
+             <br />
+          <%
+          return
+        }
+      }
+      %>
+         <div class="img_unlock ull_0 uli<%=id%>"></div>
+         <%=parseWeapon(id)%>
+         <br />
+      <%
+    }
+
+    function parseOtherBadge(id, awards) {
+      if (awards){
+      for (var i = 0; i < awards.length; i++) {
+        if (awards[i].award == id) {
+          var level = findLevel(id, awards);
+          %>
+             <div class="img_award awl1_<%=level%> awi<%=id%>"></div>
+             <%=parseDate(awards[i].when)%>
+             <br />
+          <%
+          return
+        }
+      }
+      }
+      %>
+         <div class="img_award awl1_0 awi<%=id%>"></div>
+      <%
+    }
+
+    function parseMedal(id, awards) {
+      if (awards) {
+      for (var i = 0; i < awards.length; i++) {
+        if (awards[i].award == id) {
+          %>
+             <div class="img_award awl2_1 awi<%=id%>"></div>
+             <div class=""><%=parseDate(awards[i].when)%></div>
+             <span class="badge bg-red">x<%=awards[i].level%></span>
+          <%
+          return
+        }
+      }
+      }
+      %>
+         <div class="img_award awl2_0 awi<%=id%>"></div>
+      <%
+    }
+
+    function parseRibbon(id, awards) {
+      if (awards) {
+      for (var i = 0; i < awards.length; i++) {
+        if (awards[i].award == id) {
+          %>
+             <div class="img_award awl3_1 awi<%=id%>"></div>
+             <div class=""><%=parseDate(awards[i].when)%></div>
+          <%
+          return
+        }
+      }
+      }
+      %>
+         <div class="img_award awl3_0 awi<%=id%>"></div>
+      <%
+    }
+%>
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <%- include('blocks/head') %>
+    <title><%=info.player.nick%> - Battle2log</title>
+    <script type="text/babel">
+      const friend = document.getElementById('friend');
+      class AddFriend extends React.Component {
+        constructor(props) {
+          super(props);
+          var friendsIndex = '-', friends = localStorage.getItem('friends');
+          friends = JSON.parse(friends);
+          if (friends) for (var i = 0; i < friends.length; i++) if (friends[i][0] == "<%=info.player.nick%>" && friends[i][1] == "<%=info.player.pid%>" && friends[i][2] == "<%=platform%>") friendsIndex = i;
+          if (friendsIndex == '-') {
+            this.state = {value: 'pCursor bi bi-person-plus text-info'};
+          }
+          else {
+            this.state = {value: 'pCursor bi bi-person-plus-fill text-info'};
+          }
+          this.handleClick = this.handleClick.bind(this);
+        }
+
+        handleClick() {
+          var friendsIndex = '-', friends = localStorage.getItem('friends');
+          friends = JSON.parse(friends);
+          if (!Array.isArray(friends)) friends = []
+          if (friends) for (var i = 0; i < friends.length; i++) if (friends[i][0] == "<%=info.player.nick%>" && friends[i][1] == "<%=info.player.pid%>" && friends[i][2] == "<%=platform%>") friendsIndex = i;
+          if (friendsIndex == '-') {
+            friends[friends.length] = ["<%=info.player.nick%>","<%=info.player.pid%>","<%=platform%>"]
+            localStorage.setItem('friends', JSON.stringify(friends));
+            this.setState(state => ({value: 'pCursor bi bi-person-plus-fill text-info'}));
+          }
+          else {
+            friends.splice(friendsIndex, 1);
+            localStorage.setItem('friends', JSON.stringify(friends));
+            this.setState(state => ({value: 'pCursor bi bi-person-plus text-info'}));
+          }
+        }
+        render() {
+          return <h3><%=info.player.nick%><i className={this.state.value} onClick={this.handleClick} ></i></h3>;
+        }
+      }
+      ReactDOM.render(<AddFriend/>, friend);
+    </script>
+  </head>
+  <body>
+    <%- include('blocks/header')%>
+    <%- include('blocks/loader') %>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="row py-5 row-cols-1 row-cols-lg-3">
+          <div class="feature col text-light text-center">
+              <div id="friend"></div>
+              <img class="bd-placeholder-img" width="140" height="140" src="/assets/img/ranks/<%=rank.rank%>.png"/>
+              <p><%=ranks[rank.rank].name %></p>
+              <p></p>
+              <div class="progress" style="background: #171717;">
+                <div style="width: <%=info.player.scor / ranks[Number(rank.rank) + 1].score * 100%>%; " class="progress-bar bg-red" role="progressbar" aria-valuemin="0" aria-valuemax="100"><%=info.player.scor%>/<%=ranks[Number(rank.rank) + 1].score%></div>
+              </div>
+          </div>
+          <div class="feature col text-light">
+            <div class="row">
+              <div class="col-6 text-center">
+                <h3>У/С:</h3>
+                <h1><%=Math.ceil((info.player.kill / info.player.deth)*100)/100%></h1>
+                <h6><%=info.player.kill%> убийств</h6>
+              </div>
+              <div class="col-6 text-center">
+                <h3>П/П:</h3>
+                <h1><%=Math.ceil((info.player.wins / info.player.loss)*100)/100%></h1>
+                <h6><%=info.player.wins%> побед(-ы)</h6>
+              </div>
+              <div class="col-6 text-center">
+                <h3>Время:</h3>
+                <h1><%=Math.floor(info.player.time / 60 / 60)%>Ч:<%=Math.floor(info.player.time / 60) - (Math.floor(info.player.time / 60 / 60) * 60)%>М</h1>
+              </div>
+              <div class="col-6 text-center">
+                <h3>Точность:</h3>
+                <h1><%=Math.ceil((info.player.osaa)*100)/100%>%</h1>
+              </div>
+            </div>
+          </div>
+          <% if (server.name) {%>
+          <div class="feature col text-light">
+            <div class="row">
+              <h1 class="text-success col-auto">В сети</h1>
+              <div class="col-auto">
+                <a href="<%=server.joinLink%>" class="btn btn-success">Присоединиться</a>
+              </div>
+            </div>
+            <h3>Сервер:</h3>
+              <div class="bg-black container-fluid py-1">
+                <a class="text-decoration-none text-light" href="/server/?ip=<%=server.ip%>&port=<%=server.port%>"><p><%=server.name%></p></a>
+                <h6><strong>Карта:</strong> <%=server.mapName%> <strong>Игроки:</strong> <%=server.numPlayers%>/<%=server.maxPlayers%></h6>
+                <% if (server.sponsorLogoUrl) {%>
+                  <img class="img-fluid" src="<%=server.sponsorLogoUrl%>"/>
+                <%}%>
+              </div>
+          </div>
+          <%} else {%>
+            <div class="feature col text-light">
+              <div class="row">
+                <div class="col-auto"><h1 class="text-danger col-auto">Не в сети</h1></div>
+                <div class="col-auto">
+                  <a href="" class="btn btn-success disabled"><i class="mx-1 bi bi-play-fill"></i>Присоединиться</a>
+                </div>
+              </div>
+            </div>
+          <%}%>
+        </div>
+        <div class="col-12 col-lg-4">
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Общие:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Очки: </th>
+            <td class="align-right"><%=info.player.scor%></td>
+          </tr>
+          <tr>
+            <th scope="row">Очки помощи: </th>
+            <td class="align-right"><%=info.player.twsc%></td>
+          </tr>
+          <tr>
+            <th scope="row">Боевые очки: </th>
+            <td class="align-right"><%=info.player.scor - info.player.twsc - info.player.cdsc%></td>
+          </tr>
+          <tr>
+            <th scope="row">Очки командира: </th>
+            <td class="align-right"><%=info.player.cdsc%></td>
+          </tr>
+          <tr>
+            <th scope="row">Очки в минуту: </th>
+            <td class="align-right"><%=info.player.ospm%></td>
+          </tr>
+          <tr>
+            <th scope="row">Очки в раунд: </th>
+            <td class="align-right"><%=Math.ceil((info.player.scor / (info.player.mode0 + info.player.mode1 + info.player.mode2))*10000)/100%></td>
+          </tr>
+          <tr>
+            <th scope="row">ID Игрока: </th>
+            <td class="align-right"><%=info.player.pid%></td>
+          </tr>
+          <tr>
+            <th scope="row">Дата регистрации: </th>
+            <td class="align-right">
+              <%=parseDate(info.player.jond)%>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Последний раунд: </th>
+            <td class="align-right">
+              <%=parseDate(info.player.lbtl)%>
+            </td>
+          </tr>
+          </tbody>
+         </table>
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Время:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Всего: </th>
+            <td class="align-right">
+              <%=parseTime(info.player.time)%>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Командир: </th>
+            <td class="align-right">
+              <%=parseTime(info.player.tcdr)%>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Лидер отряда: </th>
+            <td class="align-right">
+              <%=parseTime(info.player.tsql)%>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Член отряда: </th>
+            <td class="align-right">
+              <%=parseTime(info.player.tsqm)%>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Одинокий волк: </th>
+            <td class="align-right">
+              <%=parseTime(info.player.tlwf)%>
+            </td>
+          </tr>
+          </tbody>
+         </table>
+        </div>
+        <div class="col-12 col-lg-4">
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Командная игра:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Раундов: </th>
+            <td class="align-right"><%=Number(info.player.mode0) + Number(info.player.mode1) + Number(info.player.mode2)%></td>
+          </tr>
+          <tr>
+            <th scope="row">Побед: </th>
+            <td class="align-right"><%=info.player.wins%></td>
+          </tr>
+          <tr>
+            <th scope="row">Поражений: </th>
+            <td class="align-right"><%=info.player.loss%></td>
+          </tr>
+          </tbody>
+         </table>
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Флаги:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Захвачено флагов: </th>
+            <td class="align-right"><%=info.player.cpcp%></td>
+          </tr>
+          <tr>
+            <th scope="row">Помощь в захвате флага: </th>
+            <td class="align-right"><%=info.player.cacp%></td>
+          </tr>
+          <tr>
+            <th scope="row">Защита флага: </th>
+            <td class="align-right"><%=info.player.dfcp%></td>
+          </tr>
+          </tbody>
+         </table>
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Остальная командная работа:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Помощь в убийстве: </th>
+            <td class="align-right"><%=info.player.kila%></td>
+          </tr>
+          <tr>
+            <th scope="row">Лечение: </th>
+            <td class="align-right"><%=info.player.heal%></td>
+          </tr>
+          <tr>
+            <th scope="row">Воскрешений: </th>
+            <td class="align-right"><%=info.player.rviv%></td>
+          </tr>
+          <tr>
+            <th scope="row">Пополнение припасов: </th>
+            <td class="align-right"><%=info.player.rsup%></td>
+          </tr>
+          <tr>
+            <th scope="row">Ремонт: </th>
+            <td class="align-right"><%=info.player.rpar%></td>
+          </tr>
+          <tr>
+            <th scope="row">Специальные способности водителя: </th>
+            <td class="align-right"><%=info.player.dsab%></td>
+          </tr>
+          </tbody>
+         </table>
+        </div>
+        <div class="col-12 col-lg-4">
+         <table class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Бой:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Точность: </th>
+            <td class="align-right"><%=Math.ceil((info.player.osaa)*100)/100%>%</td>
+          </tr>
+          <tr>
+            <th scope="row">Соотнешение У/С: </th>
+            <td class="align-right"><%=Math.ceil((info.player.kill / info.player.deth)*100)/100%></td>
+          </tr>
+          <tr>
+            <th scope="row">Злейший враг: </th>
+            <td class="align-right"><%=info.player.vmns%></td>
+          </tr>
+          <tr>
+            <th scope="row">Лучшая жертва: </th>
+            <td class="align-right"><%=info.player.mvns%></td>
+          </tr>
+          </tbody>
+         </table>
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Убийства:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Всего: </th>
+            <td class="align-right"><%=info.player.kill%></td>
+          </tr>
+          <tr>
+            <th scope="row">Комбо: </th>
+            <td class="align-right"><%=info.player.bksk%></td>
+          </tr>
+          <tr>
+            <th scope="row">В минуту: </th>
+            <td class="align-right"><%=info.player.klpm%></td>
+          </tr>
+          <tr>
+            <th scope="row">В раунде: </th>
+            <td class="align-right"><%=Math.ceil((info.player.kill / (info.player.mode0 + info.player.mode1 + info.player.mode2))*10000)/100%></td>
+          </tr>
+          </tbody>
+         </table>
+         <table  class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr style="text-align: center;">
+            <td colspan="2">Смерти:</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th scope="row">Всего: </th>
+            <td class="align-right"><%=info.player.deth%></td>
+          </tr>
+          <tr>
+            <th scope="row">Комбо: </th>
+            <td class="align-right"><%=info.player.bksk%></td>
+          </tr>
+          <tr>
+            <th scope="row">В минуту: </th>
+            <td class="align-right"><%=info.player.dtpm%></td>
+          </tr>
+          <tr>
+            <th scope="row">В раунде: </th>
+            <td class="align-right"><%=Math.ceil((info.player.deth / (info.player.mode0 + info.player.mode1 + info.player.mode2))*10000)/100%></td>
+          </tr>
+          <tr>
+            <th scope="row">Самоубийства: </th>
+            <td class="align-right"><%=info.player.suic%></td>
+          </tr>
+          </tbody>
+        </table>
+        </div>
+        <div class="d-none d-lg-flex col-12">
+          <table class="table table-sm text-light table-bg" style="text-align: center;">
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Бронетехника</th>
+            <th scope="col">Истребитель</th>
+            <th scope="col">Вертолет</th>
+            <th scope="col">Транспорт</th>
+            <th scope="col">ПВО</th>
+            <th scope="col">Наземная защита</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['vtm-0'])%></td>
+            <td><%=parseTime(info.player['vtm-1'])%></td>
+            <td><%=parseTime(info.player['vtm-3'])%></td>
+            <td><%=parseTime(info.player['vtm-4'])%></td>
+            <td><%=parseTime(info.player['vtm-2'])%></td>
+            <td><%=parseTime(info.player['vtm-6'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['vkl-0']%></td>
+            <td><%=info.player['vkl-1']%></td>
+            <td><%=info.player['vkl-3']%></td>
+            <td><%=info.player['vkl-4']%></td>
+            <td><%=info.player['vkl-2']%></td>
+            <td><%=info.player['vkl-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Дорожных убийств: </th>
+            <td><%=info.player['vkr-0']%></td>
+            <td><%=info.player['vkr-1']%></td>
+            <td><%=info.player['vkr-3']%></td>
+            <td><%=info.player['vkr-4']%></td>
+            <td><%=info.player['vkr-2']%></td>
+            <td><%=info.player['vkr-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['vdt-0']%></td>
+            <td><%=info.player['vdt-1']%></td>
+            <td><%=info.player['vdt-3']%></td>
+            <td><%=info.player['vdt-4']%></td>
+            <td><%=info.player['vdt-2']%></td>
+            <td><%=info.player['vdt-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['vkl-0'] / info.player['vdt-0'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-1'] / info.player['vdt-1'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-3'] / info.player['vdt-3'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-4'] / info.player['vdt-4'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-2'] / info.player['vdt-2'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-6'] / info.player['vdt-6'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1220118', awards.awards)%></td>
+            <td><%=parseBadge('1220122', awards.awards)%></td>
+            <td><%=parseBadge('1220803', awards.awards)%></td>
+            <td><%=parseBadge('1222016', awards.awards)%></td>
+            <td><%=parseBadge('1220104', awards.awards)%></td>
+            <td><%=parseBadge('1031923', awards.awards)%></td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="d-lg-none text-sm col-12">
+          <table class="table table-sm text-light table-bg" style="text-align: center;">
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Бронетехника</th>
+            <th scope="col">Истребитель</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['vtm-0'])%></td>
+            <td><%=parseTime(info.player['vtm-1'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['vkl-0']%></td>
+            <td><%=info.player['vkl-1']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Дорожных убийств: </th>
+            <td><%=info.player['vkr-0']%></td>
+            <td><%=info.player['vkr-1']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['vdt-0']%></td>
+            <td><%=info.player['vdt-1']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['vkl-0'] / info.player['vdt-0'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-1'] / info.player['vdt-1'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1220118', awards.awards)%></td>
+            <td><%=parseBadge('1220122', awards.awards)%></td>
+          </tr>
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Вертолет</th>
+            <th scope="col">Транспорт</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['vtm-3'])%></td>
+            <td><%=parseTime(info.player['vtm-4'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['vkl-3']%></td>
+            <td><%=info.player['vkl-4']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Дорожных убийств: </th>
+            <td><%=info.player['vkr-3']%></td>
+            <td><%=info.player['vkr-4']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['vdt-3']%></td>
+            <td><%=info.player['vdt-4']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['vkl-3'] / info.player['vdt-3'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-4'] / info.player['vdt-4'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1220803', awards.awards)%></td>
+            <td><%=parseBadge('1222016', awards.awards)%></td>
+          </tr>
+          </tbody>
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">ПВО</th>
+            <th scope="col">Наземная защита</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['vtm-2'])%></td>
+            <td><%=parseTime(info.player['vtm-6'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['vkl-2']%></td>
+            <td><%=info.player['vkl-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Дорожных убийств: </th>
+            <td><%=info.player['vkr-2']%></td>
+            <td><%=info.player['vkr-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['vdt-2']%></td>
+            <td><%=info.player['vdt-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['vkl-2'] / info.player['vdt-2'])*100)/100%></td>
+            <td><%=Math.floor((info.player['vkl-6'] / info.player['vdt-6'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1220104', awards.awards)%></td>
+            <td><%=parseBadge('1031923', awards.awards)%></td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="d-none d-xl-flex col-12">
+          <table class="table table-sm text-light table-bg" style="text-align: center;">
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Анти-танк</th>
+            <th scope="col">Штурмовик</th>
+            <th scope="col">Инженер</th>
+            <th scope="col">Медик</th>
+            <th scope="col">Спец.Войска</th>
+            <th scope="col">Поддержка</th>
+            <th scope="col">Снайпер</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['ktm-0'])%></td>
+            <td><%=parseTime(info.player['ktm-1'])%></td>
+            <td><%=parseTime(info.player['ktm-2'])%></td>
+            <td><%=parseTime(info.player['ktm-3'])%></td>
+            <td><%=parseTime(info.player['ktm-4'])%></td>
+            <td><%=parseTime(info.player['ktm-5'])%></td>
+            <td><%=parseTime(info.player['ktm-6'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['kkl-0']%></td>
+            <td><%=info.player['kkl-1']%></td>
+            <td><%=info.player['kkl-2']%></td>
+            <td><%=info.player['kkl-3']%></td>
+            <td><%=info.player['kkl-4']%></td>
+            <td><%=info.player['kkl-5']%></td>
+            <td><%=info.player['kkl-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['kdt-0']%></td>
+            <td><%=info.player['kdt-1']%></td>
+            <td><%=info.player['kdt-2']%></td>
+            <td><%=info.player['kdt-3']%></td>
+            <td><%=info.player['kdt-4']%></td>
+            <td><%=info.player['kdt-5']%></td>
+            <td><%=info.player['kdt-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['kkl-0'] / info.player['kdt-0'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-1'] / info.player['kdt-1'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-2'] / info.player['kdt-2'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-3'] / info.player['kdt-3'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-4'] / info.player['kdt-4'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-5'] / info.player['kdt-5'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-6'] / info.player['kdt-6'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1031120', awards.awards)%></td>
+            <td><%=parseBadge('1031119', awards.awards)%></td>
+            <td><%=parseBadge('1031105', awards.awards)%></td>
+            <td><%=parseBadge('1031113', awards.awards)%></td>
+            <td><%=parseBadge('1031115', awards.awards)%></td>
+            <td><%=parseBadge('1031121', awards.awards)%></td>
+            <td><%=parseBadge('1031109', awards.awards)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('11', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('22', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('33', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('44', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('55', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('66', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('77', unlocks.unlocks)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('444', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('88', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('99', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('111', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('222', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('333', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('555', unlocks.unlocks)%></td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="d-xl-none text-sm col-12">
+          <table class="table table-sm text-light table-bg" style="text-align: center;">
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Анти-танк</th>
+            <th scope="col">Штурмовик</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['ktm-0'])%></td>
+            <td><%=parseTime(info.player['ktm-1'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['kkl-0']%></td>
+            <td><%=info.player['kkl-1']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['kdt-0']%></td>
+            <td><%=info.player['kdt-1']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['kkl-0'] / info.player['kdt-0'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-1'] / info.player['kdt-1'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1031120', awards.awards)%></td>
+            <td><%=parseBadge('1031119', awards.awards)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('11', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('22', unlocks.unlocks)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('444', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('88', unlocks.unlocks)%></td>
+          </tr>
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Инженер</th>
+            <th scope="col">Медик</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['ktm-2'])%></td>
+            <td><%=parseTime(info.player['ktm-3'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['kkl-2']%></td>
+            <td><%=info.player['kkl-3']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['kdt-2']%></td>
+            <td><%=info.player['kdt-3']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['kkl-2'] / info.player['kdt-2'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-3'] / info.player['kdt-3'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1031105', awards.awards)%></td>
+            <td><%=parseBadge('1031113', awards.awards)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('33', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('44', unlocks.unlocks)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('99', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('111', unlocks.unlocks)%></td>
+          </tr>
+          </tbody>
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">Спец.Войска</th>
+            <th scope="col">Поддержка</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td><%=parseTime(info.player['ktm-5'])%></td>
+            <td><%=parseTime(info.player['ktm-5'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td><%=info.player['kkl-5']%></td>
+            <td><%=info.player['kkl-5']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td><%=info.player['kdt-5']%></td>
+            <td><%=info.player['kdt-5']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td><%=Math.floor((info.player['kkl-5'] / info.player['kdt-5'])*100)/100%></td>
+            <td><%=Math.floor((info.player['kkl-5'] / info.player['kdt-5'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseBadge('1031115', awards.awards)%></td>
+            <td><%=parseBadge('1031121', awards.awards)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('55', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('66', unlocks.unlocks)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td><%=parseUnlock('222', unlocks.unlocks)%></td>
+            <td><%=parseUnlock('333', unlocks.unlocks)%></td>
+          </tr>
+          </tbody>
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col"></th>
+            <th colspan="2" scope="col">Спец.Войска</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <th class="table-head-bg" scope="row">Время:</th>
+            <td colspan="2"><%=parseTime(info.player['ktm-6'])%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Убийств: </th>
+            <td colspan="2"><%=info.player['kkl-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">Смертей: </th>
+            <td colspan="2"><%=info.player['kdt-6']%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row">У/С: </th>
+            <td colspan="2"><%=Math.floor((info.player['kkl-6'] / info.player['kdt-6'])*100)/100%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td colspan="2"><%=parseBadge('1031109', awards.awards)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td colspan="2"><%=parseUnlock('77', unlocks.unlocks)%></td>
+          </tr>
+          <tr>
+            <th class="table-head-bg" scope="row"></th>
+            <td colspan="2"><%=parseUnlock('555', unlocks.unlocks)%></td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="col-12 col-lg-6 overflow-auto">
+          <table class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col">Оружие</th>
+            <th scope="col">Время</th>
+            <th scope="col">Убийства</th>
+            <th scope="col">Смертей</th>
+            <th scope="col">У/С</th>
+            <th scope="col">Точность</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>Штурмовая винтовка</td>
+            <td><%=parseTime(info.player['wtm-0'])%></td>
+            <td><%=info.player['wkl-0']%></td>
+            <td><%=info.player['wdt-0']%></td>
+            <td><%=Math.floor((info.player['wkl-0'] / info.player['wdt-0'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-0'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Гранатомет</td>
+            <td><%=parseTime(info.player['wtm-1'])%></td>
+            <td><%=info.player['wkl-1']%></td>
+            <td><%=info.player['wdt-1']%></td>
+            <td><%=Math.floor((info.player['wkl-1'] / info.player['wdt-1'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-1'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Карабин</td>
+            <td><%=parseTime(info.player['wtm-2'])%></td>
+            <td><%=info.player['wkl-2']%></td>
+            <td><%=info.player['wdt-2']%></td>
+            <td><%=Math.floor((info.player['wkl-2'] / info.player['wdt-2'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-2'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Легкий ПП</td>
+            <td><%=parseTime(info.player['wtm-3'])%></td>
+            <td><%=info.player['wkl-3']%></td>
+            <td><%=info.player['wdt-3']%></td>
+            <td><%=Math.floor((info.player['wkl-3'] / info.player['wdt-3'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-3'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Снайперская винтовка</td>
+            <td><%=parseTime(info.player['wtm-4'])%></td>
+            <td><%=info.player['wkl-4']%></td>
+            <td><%=info.player['wdt-4']%></td>
+            <td><%=Math.floor((info.player['wkl-4'] / info.player['wdt-4'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-4'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Пистолет</td>
+            <td><%=parseTime(info.player['wtm-5'])%></td>
+            <td><%=info.player['wkl-5']%></td>
+            <td><%=info.player['wdt-5']%></td>
+            <td><%=Math.floor((info.player['wkl-5'] / info.player['wdt-5'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-5'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Ракетница</td>
+            <td><%=parseTime(info.player['wtm-6'])%></td>
+            <td><%=info.player['wkl-6']%></td>
+            <td><%=info.player['wdt-6']%></td>
+            <td><%=Math.floor((info.player['wkl-6'] / info.player['wdt-6'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-6'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>ПП</td>
+            <td><%=parseTime(info.player['wtm-7'])%></td>
+            <td><%=info.player['wkl-7']%></td>
+            <td><%=info.player['wdt-7']%></td>
+            <td><%=Math.floor((info.player['wkl-7'] / info.player['wdt-7'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-7'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Дробовик</td>
+            <td><%=parseTime(info.player['wtm-8'])%></td>
+            <td><%=info.player['wkl-8']%></td>
+            <td><%=info.player['wdt-8']%></td>
+            <td><%=Math.floor((info.player['wkl-8'] / info.player['wdt-8'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-8'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Нож</td>
+            <td><%=parseTime(info.player['wtm-9'])%></td>
+            <td><%=info.player['wkl-9']%></td>
+            <td><%=info.player['wdt-9']%></td>
+            <td><%=Math.floor((info.player['wkl-9'] / info.player['wdt-9'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-9'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Дефибриллятор</td>
+            <td><%=parseTime(info.player['wtm-10'])%></td>
+            <td><%=info.player['wkl-10']%></td>
+            <td><%=info.player['wdt-10']%></td>
+            <td><%=Math.floor((info.player['wkl-10'] / info.player['wdt-10'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-10'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Взрывчатка</td>
+            <td><%=parseTime(info.player['wtm-11'])%></td>
+            <td><%=info.player['wkl-11']%></td>
+            <td><%=info.player['wdt-11']%></td>
+            <td><%=Math.floor((info.player['wkl-11'] / info.player['wdt-11'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-11'])*100)/100%>%</td>
+          </tr>
+          <tr>
+            <td>Осколочная граната</td>
+            <td><%=parseTime(info.player['wtm-12'])%></td>
+            <td><%=info.player['wkl-12']%></td>
+            <td><%=info.player['wdt-12']%></td>
+            <td><%=Math.floor((info.player['wkl-12'] / info.player['wdt-12'])*100)/100%></td>
+            <td><%=Math.floor((info.player['wac-12'])*100)/100%>%</td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="col-12 col-lg-6 overflow-auto">
+          <table class="table table-sm text-light table-bg">
+          <thead class="table-head-bg">
+          <tr>
+            <th scope="col">Армия</th>
+            <th scope="col">Время</th>
+            <th scope="col">Побед</th>
+            <th scope="col">Проигрышей</th>
+            <th scope="col">П/П</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>USMC</td>
+            <td><%=parseTime(info.player['atm-0'])%></td>
+            <td><%=info.player['awn-0']%></td>
+            <td><%=info.player['alo-0']%></td>
+            <td><%=Math.floor((info.player['awn-0'] / info.player['alo-0'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>MEC</td>
+            <td><%=parseTime(info.player['atm-1'])%></td>
+            <td><%=info.player['awn-1']%></td>
+            <td><%=info.player['alo-1']%></td>
+            <td><%=Math.floor((info.player['awn-1'] / info.player['alo-1'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>PLA</td>
+            <td><%=parseTime(info.player['atm-2'])%></td>
+            <td><%=info.player['awn-2']%></td>
+            <td><%=info.player['alo-2']%></td>
+            <td><%=Math.floor((info.player['awn-2'] / info.player['alo-2'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>EU</td>
+            <td><%=parseTime(info.player['atm-9'])%></td>
+            <td><%=info.player['awn-9']%></td>
+            <td><%=info.player['alo-9']%></td>
+            <td><%=Math.floor((info.player['awn-9'] / info.player['alo-9'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>SEAL</td>
+            <td><%=parseTime(info.player['atm-3'])%></td>
+            <td><%=info.player['awn-3']%></td>
+            <td><%=info.player['alo-3']%></td>
+            <td><%=Math.floor((info.player['awn-3'] / info.player['alo-3'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>SAS</td>
+            <td><%=parseTime(info.player['atm-4'])%></td>
+            <td><%=info.player['awn-4']%></td>
+            <td><%=info.player['alo-4']%></td>
+            <td><%=Math.floor((info.player['awn-4'] / info.player['alo-4'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>Spetznas</td>
+            <td><%=parseTime(info.player['atm-5'])%></td>
+            <td><%=info.player['awn-5']%></td>
+            <td><%=info.player['alo-5']%></td>
+            <td><%=Math.floor((info.player['awn-5'] / info.player['alo-5'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>MEC SF</td>
+            <td><%=parseTime(info.player['atm-6'])%></td>
+            <td><%=info.player['awn-6']%></td>
+            <td><%=info.player['alo-6']%></td>
+            <td><%=Math.floor((info.player['awn-6'] / info.player['alo-6'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>Rebels</td>
+            <td><%=parseTime(info.player['atm-7'])%></td>
+            <td><%=info.player['awn-7']%></td>
+            <td><%=info.player['alo-7']%></td>
+            <td><%=Math.floor((info.player['awn-7'] / info.player['alo-7'])*100)/100%></td>
+          </tr>
+          <tr>
+            <td>Insurgents</td>
+            <td><%=parseTime(info.player['atm-8'])%></td>
+            <td><%=info.player['awn-8']%></td>
+            <td><%=info.player['alo-8']%></td>
+            <td><%=Math.floor((info.player['awn-8'] / info.player['alo-8'])*100)/100%></td>
+          </tr>
+          </tbody>
+          </table>
+        </div>
+        <div class="col-12 overflow-hidden">
+          <div class="container-fluid" >
+            <div class="row text-light text-center table-bg">
+              <div class="table-head-bg col-12">Значки</div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1031406', awards.awards)%>
+                Ножевой бой
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1031619', awards.awards)%>
+                Пистолетный бой
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1032415', awards.awards)%>
+                Установка взрывчатки
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1190601', awards.awards)%>
+                Первая помощь
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1190507', awards.awards)%>
+                Инженер
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1191819', awards.awards)%>
+                Припасы
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1190304', awards.awards)%>
+                Командование
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1260602', awards.awards)%>
+                Тактическая поддержка
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1260708', awards.awards)%>
+                Специалист по крюкам
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261105', awards.awards)%>
+                Инженер-специалист
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261109', awards.awards)%>
+                Снайпер-специалист
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261113', awards.awards)%>
+                Медик-специалист
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261115', awards.awards)%>
+                Специалист спец.Войск
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261119', awards.awards)%>
+                Штурмовик-специалист
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261120', awards.awards)%>
+                АТ-специалист
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1261121', awards.awards)%>
+                Поддержка-специалист
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseOtherBadge('1262612', awards.awards)%>
+                Специалист по тросам
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 overflow-hidden">
+          <div class="container-fluid" >
+            <div class="row text-light text-center table-bg">
+              <div class="table-head-bg col-12">Медали</div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2051907', awards.awards)%>Золотая звезда
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2051919', awards.awards)%>Серебряная звезда
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2051902', awards.awards)%>Бронзовая звезда
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2191608', awards.awards)%>Фиолетовое сердце
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2191319', awards.awards)%>Медаль за особые заслуги
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2190303', awards.awards)%>Медаль за боевые действия
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2190309', awards.awards)%>Медаль за ведение воздушного боя
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2190318', awards.awards)%>Медаль за ведение боя в бронетехнике
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2190308', awards.awards)%>Вертолетная медаль
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2190703', awards.awards)%>Медаль за хорошее поведение
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2020903', awards.awards)%>Медаль за бой пехотой
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2020913', awards.awards)%>Медаль стрелка
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2020919', awards.awards)%>Медаль меткого стрелка
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2021322', awards.awards)%>Медаль за отвагу
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2020419', awards.awards)%>Медаль за выдающиеся заслуги
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2021403', awards.awards)%>Военно-морской крест
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2021613', awards.awards)%>Народный медальйон
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2020719', awards.awards)%>Ятаган
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2270521', awards.awards)%>Медаль за службу Европейскому Союзу
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2261613', awards.awards)%>Медаль за службу в русском Спецназе
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2261919', awards.awards)%>Медаль особой воздушной службы
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2261802', awards.awards)%>Медаль за службу повстанцем
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2261303', awards.awards)%>Медаль за службу Спец.Войскам Коалиции стран Среднего Востока
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2261913', awards.awards)%>Медаль за службу спецназу ВМС США
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseMedal('2260914', awards.awards)%>Медаль за службу повстанческим вооруженым силам
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 overflow-hidden pb-2">
+          <div class="container-fluid" >
+            <div class="row text-light text-center table-bg">
+              <div class="table-head-bg col-12">Нашивки</div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3040109', awards.awards)%>
+                Нашивка за воздушную защиту
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3040718', awards.awards)%>
+                Нашивка за наземную защиту
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3150914', awards.awards)%>
+                Нашивка полевого офицера
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3151920', awards.awards)%>
+                Нашивка штабного офицера
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3190105', awards.awards)%>
+                Нашивка за воздушную службу
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3190118', awards.awards)%>
+                Нашивка за автобронетанковую службу
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3190318', awards.awards)%>
+                Нашивка за службу бригадиром
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3190409', awards.awards)%>
+                Нашивка за выдающиеся заслуги
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3190605', awards.awards)%>
+                Нашивка за службу дальному востоку
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3190803', awards.awards)%>
+                Нашивка за вертолетную службу
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3191305', awards.awards)%>
+                Нашивка за службу Коалиции стран Среднего Востока
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3211305', awards.awards)%>
+                Похвальная благодарность армейской воинской части
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3212201', awards.awards)%>
+                Нашивка за доблесные заслуги
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3240102', awards.awards)%>
+                Нашивка за службу воздушным-десантом
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3240301', awards.awards)%>
+                Нашивка за боевые действия
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3240703', awards.awards)%>
+                Нашивка за хорошее поведение
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3241213', awards.awards)%>
+                Нашивка Легиона Заслуг
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3242303', awards.awards)%>
+                Нашивка проффесора военного училища
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3260118', awards.awards)%>
+                Нашивка специалиста по бронетранспорту
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3260318', awards.awards)%>
+                Нашивка водителя
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3260803', awards.awards)%>
+                Нашивка специалиста по вертолету
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3260914', awards.awards)%>
+                Нашивка за службу повстанческим силам
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3261319', awards.awards)%>
+                Нашивка за службу Специальным войскам Коалиции стран Среднего Востока
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3261805', awards.awards)%>
+                Нашивка повстанца
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3261819', awards.awards)%>
+                Нашивка за службу в русском спецназе
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3240301', awards.awards)%>
+                Нашивка особой воздушной службы
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3240703', awards.awards)%>
+                Нашивка за службу в спецназе ВМС США
+              </div>
+              <div class="col-4 col-lg-2 table-bg">
+                <%=parseRibbon('3271401', awards.awards)%>
+                Нашивка Северной Америки
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-red" aria-label="Fourth navbar example">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">BATTLE2LOG</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item">
+            <a class="nav-link" href="/servers">Сервера</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/leaderboard">Списки лидеров</a>
+          </li>
+        </ul>
+        <form role="search" class="row" method="get" action="/search">
+          <div class="input-group mb-3">
+            <input class="form-control" name="player" type="search" placeholder="Никнейм" value="" aria-label="Поиск игрока">
+            <select class="form-select" name="platform" aria-label="Платформа">
+              <option value="bf2hub">BF2Hub</option>
+              <option value="playbf2">PlayBF2</option>
+            </select>
+            <button type="submit" class="btn btn-secondary">Поиск</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>

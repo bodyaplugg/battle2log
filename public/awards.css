@@ -1,0 +1,126 @@
+.awl1_3 { width:64px; height:64px; background-image:url(assets/img/sprites/sprites_a13.png); }
+.awl1_2 { width:64px; height:64px; background-image:url(assets/img/sprites/sprites_a12.png); }
+.awl1_1 { width:64px; height:64px; background-image:url(assets/img/sprites/sprites_a11.png); }
+.awl1_0 { width:64px; height:64px; background-image:url(assets/img/sprites/sprites_a10.png); }
+.awl2_0 { width:64px; height:64px; background-image:url(assets/img/sprites/sprites_a20.png); }
+.awl2_1 { width:64px; height:64px; background-image:url(assets/img/sprites/sprites_a21.png); }
+.awl3_0 { width:64px; height:24px; background-image:url(assets/img/sprites/sprites_a30.png); }
+.awl3_1 { width:64px; height:24px; background-image:url(assets/img/sprites/sprites_a31.png); }
+.ull_1 { width:120px; height:32px; background-image:url(assets/img/sprites/weapons_1.png); }
+.ull_0 { width:120px; height:32px; background-image:url(assets/img/sprites/weapons_0.png); }
+
+.img_award { background-repeat:none; background-position:none; margin:0 auto; }
+.img_unlock { background-repeat:none; background-position:none; margin:0 auto; }
+
+.awi1031105 { background-position:0px 0px; }
+.awi1031109 { background-position:0px -64px; }
+.awi1031113 { background-position:0px -128px; }
+.awi1031115 { background-position:0px -192px; }
+.awi1031119 { background-position:0px -256px; }
+.awi1031120 { background-position:0px -320px; }
+.awi1031121 { background-position:0px -384px; }
+.awi1031406 { background-position:0px -448px; }
+.awi1031619 { background-position:0px -512px; }
+.awi1031923 { background-position:0px -576px; }
+.awi1032415 { background-position:0px -640px; }
+.awi1190304 { background-position:0px -704px; }
+.awi1190507 { background-position:0px -768px; }
+.awi1190601 { background-position:0px -832px; }
+.awi1191819 { background-position:0px -896px; }
+.awi1220104 { background-position:0px -960px; }
+.awi1220118 { background-position:0px -1024px; }
+.awi1220122 { background-position:0px -1088px; }
+.awi1220803 { background-position:0px -1152px; }
+.awi1222016 { background-position:0px -1216px; }
+.awi1260602 { background-position:0px -1280px; }
+.awi1260708 { background-position:0px -1344px; }
+.awi1261105 { background-position:0px -1408px; }
+.awi1261109 { background-position:0px -1472px; }
+.awi1261113 { background-position:0px -1536px; }
+.awi1261115 { background-position:0px -1600px; }
+.awi1261119 { background-position:0px -1664px; }
+.awi1261120 { background-position:0px -1728px; }
+.awi1261121 { background-position:0px -1792px; }
+.awi1261422 { background-position:0px -1856px; }
+.awi1262612 { background-position:0px -1920px; }
+.awi2020419 { background-position:0px 0px; }
+.awi2020719 { background-position:0px -64px; }
+.awi2020903 { background-position:0px -128px; }
+.awi2020913 { background-position:0px -192px; }
+.awi2020919 { background-position:0px -256px; }
+.awi2021322 { background-position:0px -320px; }
+.awi2021403 { background-position:0px -384px; }
+.awi2021613 { background-position:0px -448px; }
+.awi2051902 { background-position:0px -512px; }
+.awi2051907 { background-position:0px -576px; }
+.awi2051919 { background-position:0px -640px; }
+.awi2190303 { background-position:0px -704px; }
+.awi2190308 { background-position:0px -768px; }
+.awi2190309 { background-position:0px -832px; }
+.awi2190318 { background-position:0px -896px; }
+.awi2190703 { background-position:0px -960px; }
+.awi2191319 { background-position:0px -1024px; }
+.awi2191608 { background-position:0px -1088px; }
+.awi2260219 { background-position:0px -1152px; }
+.awi2260719 { background-position:0px -1216px; }
+.awi2260914 { background-position:0px -1280px; }
+.awi2261303 { background-position:0px -1344px; }
+.awi2261613 { background-position:0px -1408px; }
+.awi2261802 { background-position:0px -1472px; }
+.awi2261901 { background-position:0px -1536px; }
+.awi2261913 { background-position:0px -1600px; }
+.awi2261919 { background-position:0px -1664px; }
+.awi2270521 { background-position:0px -1728px; }
+.awi3040109 { background-position:0px 0px; }
+.awi3040718 { background-position:0px -24px; }
+.awi3150914 { background-position:0px -48px; }
+.awi3151920 { background-position:0px -72px; }
+.awi3190105 { background-position:0px -96px; }
+.awi3190118 { background-position:0px -120px; }
+.awi3190318 { background-position:0px -144px; }
+.awi3190409 { background-position:0px -168px; }
+.awi3190605 { background-position:0px -192px; }
+.awi3190803 { background-position:0px -216px; }
+.awi3191305 { background-position:0px -240px; }
+.awi3211305 { background-position:0px -264px; }
+.awi3212201 { background-position:0px -288px; }
+.awi3240102 { background-position:0px -312px; }
+.awi3240301 { background-position:0px -336px; }
+.awi3240703 { background-position:0px -360px; }
+.awi3241213 { background-position:0px -384px; }
+.awi3242303 { background-position:0px -408px; }
+.awi3260118 { background-position:0px -432px; }
+.awi3260318 { background-position:0px -456px; }
+.awi3260803 { background-position:0px -480px; }
+.awi3260914 { background-position:0px -504px; }
+.awi3261319 { background-position:0px -528px; }
+.awi3261805 { background-position:0px -552px; }
+.awi3261819 { background-position:0px -576px; }
+.awi3261901 { background-position:0px -600px; }
+.awi3261919 { background-position:0px -624px; }
+.awi3270519 { background-position:0px -648px; }
+.awi3271401 { background-position:0px -672px; }
+.uli11 { background-position:0px 0px; }
+.uli22 { background-position:0px -32px; }
+.uli33 { background-position:0px -64px; }
+.uli44 { background-position:0px -96px; }
+.uli55 { background-position:0px -128px; }
+.uli66 { background-position:0px -160px; }
+.uli77 { background-position:0px -192px; }
+.uli88 { background-position:0px -224px; }
+.uli99 { background-position:0px -256px; }
+.uli111 { background-position:0px -288px; }
+.uli222 { background-position:0px -320px; }
+.uli333 { background-position:0px -352px; }
+.uli444 { background-position:0px -384px; }
+.uli555 { background-position:0px -416px; }
+
+#content .statpage .dlarea { padding:30px 0 20px 0; }
+#content .statpage .dllink { color:#ddd; }
+
+.awdTooltip,
+.awdTooltip .stage ul,
+.awdTooltip .awdHints {
+	font-size:12px;
+	color:#444;
+}

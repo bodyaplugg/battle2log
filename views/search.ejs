@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <%- include('blocks/head') %>
+    <title>Поиск: <%=player%> - Battle2log</title>
+  </head>
+  <body>
+    <%- include('blocks/header')%>
+    <%- include('blocks/loader') %>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+         <h1 class="text">Результаты поиска:</h1>
+        </div>
+    <% for(var i = 0; i < players.length; i++) {%>
+      <div class="col-12">
+      <div class="container-fluid">
+       <div class="nickname row">
+         <img class="bd-placeholder-img col-auto " width="64" height="64" src="/assets/img/ranks/<%=ranks[i].rank%>.png"/>
+         <a href="/profile/?pid=<%=players[i].pid%>&platform=<%=platform%>" class="text-decoration-none link-light col-auto " ><h1><%=players[i].nick%></h1></a>
+       </div>
+      </div>
+      </div>
+    <% } %>
+      </div>
+    </div>
+  </body>
+</html>
