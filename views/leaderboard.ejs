@@ -1,5 +1,5 @@
 <%
-function parseLeaderboard(leaderboard, platform) {
+function parseLeaderboard(leaderboard) {
  for(var i = 0; i < leaderboard.length; i++) { %>
     <div class="col-12">
       <div class="container-fluid">
@@ -7,7 +7,7 @@ function parseLeaderboard(leaderboard, platform) {
           <h1 class="col-auto"><strong>#<%=i + 1%></strong></h1>
           <img class="bd-placeholder-img col-auto d-none d-sm-flex" width="40" height="40" src="/assets/img/flags/<%=leaderboard[i].countrycode.toLowerCase()%>.png"/>
           <img class="bd-placeholder-img col-auto" width="64" height="64" src="/assets/img/ranks/<%=leaderboard[i].playerrank%>.png"/>
-          <a href="/profile/?pid=<%=leaderboard[i].pid%>&platform=<%=platform%>" class=" text-decoration-none link-light col-auto" ><h1 class=""><%=leaderboard[i].nick%></h1></a>
+          <a href="/profile/?pid=<%=leaderboard[i].pid%>&platform=bf2hub" class="text-decoration-none link-light col-auto" ><h1 class=""><%=leaderboard[i].nick%></h1></a>
         </div>
       </div>
     </div>
@@ -30,20 +30,7 @@ function parseLeaderboard(leaderboard, platform) {
         </div>
         <div>
           <div class="table-bg text-light">
-          <nav>
-            <div class="nav-lb nav-tabs-lb mb-3" id="nav-tab" role="tablist">
-              <button class="nav-link-lb active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-bf2hub" type="button" role="tab" aria-controls="nav-home" aria-selected="true">BF2Hub</button>
-              <button class="nav-link-lb" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-playbf2" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" tabindex="-1">PlayBF2</button>
-            </div>
-          </nav>
-          <div class="tab-content" id="nav-tabContent">
-            <div class="container-fluid pb-2 mb-2 tab-pane fade active show" id="nav-bf2hub" role="tabpanel" aria-labelledby="nav-home-tab">
-              <%parseLeaderboard(bf2hub, 'bf2hub')%>
-            </div>
-            <div class="container-fluid pb-2 mb-2 tab-pane fade" id="nav-playbf2" role="tabpanel" aria-labelledby="nav-profile-tab">
-              <%parseLeaderboard(playbf2, 'playbf2')%>
-            </div>
-          </div>
+            <%parseLeaderboard(bf2hub, 'bf2hub')%>
           </div>
         </div>
   </body>

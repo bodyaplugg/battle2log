@@ -102,11 +102,7 @@ app.get('/leaderboard/', async function (req, res) {
   bf2hub = JSON.parse(bf2hub.body);
   if (bf2hub.errors) return res.status(404).render('404');
 
-  var playbf2 = await stats.lambdaHandler( {path: 'getleaderboard', queryStringParameters: {project: 'playbf2'}});
-  playbf2 = JSON.parse(playbf2.body);
-  if (playbf2.errors) return res.status(404).render('404');
-
-  res.render('leaderboard', {bf2hub: bf2hub.players, playbf2: playbf2.players});
+  res.render('leaderboard', {bf2hub: bf2hub.players});
 });
 
 app.get('/servers/', async function (req, res) {
