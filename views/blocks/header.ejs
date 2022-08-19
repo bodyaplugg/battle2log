@@ -14,6 +14,35 @@
             <a class="nav-link" href="/leaderboard">Списки лидеров</a>
           </li>
         </ul>
+        <div id="indicators" class="row text-light">
+        </div>
+        <script type="text/babel">
+          const root = document.getElementById('indicators');
+          class Indicators extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = {servers: 0, players: 0};
+            }
+
+            componentDidMount() {
+              fetch("https://api.bflist.io/bf2/v1/livestats")
+                .then(res => res.json())
+                .then(
+                  (result) => {
+                    this.setState({
+                      servers: result.servers,
+                      players: result.players,
+                    });
+                  },
+                )
+            }
+            render() {
+              return <h3 style={{fontWeight: 600}}><i className="bi bi-hdd-stack-fill"></i>{this.state.servers}<i className="bi bi-people-fill"></i>{this.state.players}</h3>
+            }
+          }
+
+          ReactDOM.render(<Indicators/>, root);
+        </script>
         <form role="search" class="row" method="get" action="/search">
           <div class="input-group mb-3">
             <input class="form-control" name="player" type="search" placeholder="Никнейм" value="" aria-label="Поиск игрока">
