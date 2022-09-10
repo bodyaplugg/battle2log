@@ -1,15 +1,25 @@
 const express = require('express'),
       app = express(),
       fs = require('fs'),
+      path = require('path'),
       stats = require('./stats'),
-      rankslist = require('./ranks'),
-      fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+      rankslist = require('./ranks.json'),
+      fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args)),
+      i18n = require("i18n-express");
 
 app.set('view engine', 'ejs');
 const port = process.env.PORT || 3000;
 
 app.set('views', __dirname + '/views');
 app.use(express.static(__dirname + '/public'));
+
+app.use(i18n({
+  translationsPath: path.join(__dirname, 'locales'),
+  siteLangs: ["en","ru"],
+  paramLangName: 'lang',
+  defaultLocale: 'en',
+  textsVarName: 'translation'
+}));
 
 app.get('/', async function (req, res){
   var serverslist = [], servers = [];

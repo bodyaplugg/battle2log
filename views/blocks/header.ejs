@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-red" aria-label="Fourth navbar example">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">BATTLE2LOG</a>
+      <a class="navbar-brand" href="/?lang=<%=lang%>">BATTLE2LOG</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbarsExample04" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -8,10 +8,22 @@
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="navbar-nav me-auto mb-2 mb-md-0">
           <li class="nav-item">
-            <a class="nav-link" href="/servers">Сервера</a>
+            <a class="nav-link" href="/servers/?lang=<%=lang%>"><%=translation.HEADER_SERVERS%></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/leaderboard">Списки лидеров</a>
+            <a class="nav-link" href="/leaderboard/?lang=<%=lang%>"><%=translation.HEADER_LEADERBOARD%></a>
+          </li>
+          <li class="nav-item">
+            <div class="dropdown">
+            <button class="btn btn-danger dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+              <%=lang.toUpperCase()%>
+            </button>
+            <ul class="dropdown-menu" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 40px); background: #2f2f2f;" data-popper-placement="bottom-start">
+              <li><h6 class="dropdown-header"><%=translation.HEADER_LANG_TITLE%></h6></li>
+              <li><a class="dropdown-item text-light" href="/?lang=ru">RU</a></li>
+              <li><a class="dropdown-item text-light" href="/?lang=en">EN</a></li>
+            </ul>
+          </div>
           </li>
         </ul>
         <div id="indicators" class="row text-light">
@@ -45,12 +57,12 @@
         </script>
         <form role="search" class="row" method="get" action="/search">
           <div class="input-group mb-3">
-            <input class="form-control" name="player" type="search" placeholder="Никнейм" value="" aria-label="Поиск игрока">
+            <input class="form-control" name="player" type="search" placeholder="<%=translation.HEADER_NICKNAME%>" value="" aria-label="Поиск игрока">
             <select class="form-select" name="platform" aria-label="Платформа">
               <option value="bf2hub">BF2Hub</option>
               <option value="playbf2">PlayBF2</option>
             </select>
-            <button type="submit" class="btn btn-secondary">Поиск</button>
+            <button type="submit" class="btn btn-secondary"><%=translation.HEADER_SEARCH%></button>
           </div>
         </form>
       </div>

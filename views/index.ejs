@@ -12,8 +12,8 @@ function parseServers(servers) {
           <i class="d-none d-lg-flex mx-1 bi bi-<%if (!servers[i].password) {%>un<%}%>lock-fill col-auto d-flex"></i>
           <i class="d-none d-lg-flex mx-1 bi bi-mic-<%if (!servers[i].voip) {%>mute-<%}%>fill col-auto d-flex"></i>
           <div class="col-auto">
-            <a href="/server/?ip=<%=servers[i].ip%>&port=<%=servers[i].port%>" class="my-2 text-decoration-none link-light col-auto" ><p class="text-nowrap text-truncate fs-3"><%=servers[i].name%></p></a>
-            <h6>Карта: <%=servers[i].mapName%><%=parseMode(servers[i].gameType)%></h6>
+            <a href="/server/?ip=<%=servers[i].ip%>&port=<%=servers[i].port%>&lang=<%=lang%>" class="my-2 text-decoration-none link-light col-auto" ><p class="text-nowrap text-truncate fs-3"><%=servers[i].name%></p></a>
+            <h6><%=translation.MAIN_MAP%>: <%=servers[i].mapName%><%=parseMode(servers[i].gameType)%></h6>
           </div>
         </div>
       </div>
@@ -43,7 +43,7 @@ function parseMode(mode) {
       <div class="row">
         <div class="col-12 pt-2">
           <div class="text-light title p-2">
-            <h1>Популярные сервера:</h1>
+            <h1><%=translation.MAIN_POPULAR_SERVERS%>:</h1>
             <div class="col-12">
               <div style="height:250px;" class="overflow-auto scrollbar">
                 <%parseServers(servers)%>
@@ -53,7 +53,7 @@ function parseMode(mode) {
         </div>
         <div class="col-12 col-lg-6 pt-2">
           <div class="text-light title p-2">
-            <h1>Избранные сервера:</h1>
+            <h1><%=translation.MAIN_FAVSERVERS%>:</h1>
             <div class="col-12">
               <div id="favservers" style="height:250px;" class="overflow-auto scrollbar">
               </div>
@@ -84,8 +84,8 @@ function parseMode(mode) {
                                         <span className="mx-1 rounded-pill badge bg-red d-flex">{result.numPlayers}/{result.maxPlayers}</span>
                                       </div>
                                       <div className="col-auto">
-                                        <a href={"/server/?ip=" + result.ip + "&port=" + result.port} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{result.name}</p></a>
-                                        <h6>Карта: {result.mapName}{(result.gameType == 'gpm_cq') ? '(Conquest)' : '(Co-op)'}</h6>
+                                        <a href={"/server/?ip=" + result.ip + "&port=" + result.port + "&lang=<%=lang%>"} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{result.name}</p></a>
+                                        <h6><%=translation.MAIN_MAP%>: {result.mapName}{(result.gameType == 'gpm_cq') ? '(Conquest)' : '(Co-op)'}</h6>
                                       </div>
                                     </div>
                                   </div>
@@ -102,7 +102,7 @@ function parseMode(mode) {
                                       </div>
                                       <div className="col-auto">
                                         <a className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{this.props.ip}</p></a>
-                                        <h6>Карта: -</h6>
+                                        <h6><%=translation.MAIN_MAP%>: -</h6>
                                       </div>
                                     </div>
                                   </div>
@@ -131,7 +131,7 @@ function parseMode(mode) {
         </div>
         <div class="col-12 col-lg-6 pt-2">
           <div class="text-light title p-2">
-            <h1>Друзья:</h1>
+            <h1><%=translation.MAIN_FRIENDS%>:</h1>
             <div class="col-12">
               <div id="friends" style="height:250px;" class="overflow-auto scrollbar">
               </div>
@@ -159,8 +159,8 @@ function parseMode(mode) {
                                           <div className="server row overflow-hidden flex-nowrap align-items-center">
                                             <i class="col-auto text-success bi bi-circle-fill"></i>
                                             <div className="col-auto">
-                                              <a href={"/profile/?pid=" + this.props.pid + "&platform=" + this.props.platform} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{result.name}</p></a>
-                                              <a href={"/server/?ip=" + server.ip + "&port=" + server.port} className="my-2 text-decoration-none link-light col-auto" ><h6>Сервер: {server.name}</h6></a>
+                                              <a href={"/profile/?pid=" + this.props.pid + "&platform=" + this.props.platform + "&lang=<%=lang%>"} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{result.name}</p></a>
+                                              <a href={"/server/?ip=" + server.ip + "&port=" + server.port + "&lang=<%=lang%>"} className="my-2 text-decoration-none link-light col-auto" ><h6><%=translation.MAIN_SERVER%>: {server.name}</h6></a>
                                             </div>
                                           </div>
                                         </div>
@@ -173,8 +173,8 @@ function parseMode(mode) {
                                           <div className="server row overflow-hidden flex-nowrap align-items-center">
                                             <i class="col-auto text-danger bi bi-circle-fill"></i>
                                             <div className="col-auto">
-                                              <a href={"/profile/?pid=" + this.props.pid + "&platform=" + this.props.platform} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{this.props.name}</p></a>
-                                              <a href={"/server/?ip=" + server.ip + "&port=" + server.port} className="my-2 text-decoration-none link-light col-auto" ><h6>Сервер: -</h6></a>
+                                              <a href={"/profile/?pid=" + this.props.pid + "&platform=" + this.props.platform + "&lang=<%=lang%>"} className="my-2 text-decoration-none link-light col-auto" ><p className="text-nowrap text-truncate fs-3">{this.props.name}</p></a>
+                                              <a href={"/server/?ip=" + server.ip + "&port=" + server.port + "&lang=<%=lang%>"} className="my-2 text-decoration-none link-light col-auto" ><h6><%=translation.MAIN_SERVER%>: -</h6></a>
                                             </div>
                                           </div>
                                         </div>
@@ -203,7 +203,7 @@ function parseMode(mode) {
         </div>
         <div class="col-12 py-2">
           <div class="text-light title p-2">
-            <h1>График игроков в сети: </h1>
+            <h1><%=translation.MAIN_PLAYERS_CHART%>: </h1>
             <div class="col-12">
               <canvas class="my-4 w-100 chartjs-render-monitor" id="players" width="420" height="150" style="display: block; width: 555px; height: 234px;"></canvas>
               <script>

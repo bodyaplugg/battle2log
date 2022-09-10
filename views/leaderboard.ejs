@@ -7,7 +7,7 @@ function parseLeaderboard(leaderboard) {
           <h1 class="col-auto"><strong>#<%=i + 1%></strong></h1>
           <img class="bd-placeholder-img col-auto d-none d-sm-flex" width="40" height="40" src="/assets/img/flags/<%=leaderboard[i].countrycode.toLowerCase()%>.png"/>
           <img class="bd-placeholder-img col-auto" width="64" height="64" src="/assets/img/ranks/<%=leaderboard[i].playerrank%>.png"/>
-          <a href="/profile/?pid=<%=leaderboard[i].pid%>&platform=bf2hub" class="text-decoration-none link-light col-auto" ><h1 class=""><%=leaderboard[i].nick%></h1></a>
+          <a href="/profile/?pid=<%=leaderboard[i].pid%>&platform=bf2hub&lang=<%=lang%>" class="text-decoration-none link-light col-auto" ><h1 class=""><%=leaderboard[i].nick%></h1></a>
         </div>
       </div>
     </div>
@@ -18,7 +18,7 @@ function parseLeaderboard(leaderboard) {
 <html lang="ru">
   <head>
     <%- include('blocks/head') %>
-    <title>Списки лидеров - Battle2log</title>
+    <title><%=translation.LEADERBOARD_TITLE%> - Battle2log</title>
   </head>
   <body>
     <%- include('blocks/header')%>
@@ -26,7 +26,7 @@ function parseLeaderboard(leaderboard) {
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">
-         <h1 class="text">Списки лидеров: </h1>
+         <h1 class="text"><%=translation.LEADERBOARD_TITLE%>: </h1>
         </div>
         <div>
           <div class="table-bg text-light">

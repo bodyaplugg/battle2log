@@ -8,7 +8,7 @@ function parsePlayers(server, team) {
   for (var i = 0; i < server.players.length; i++) {
     if (server.players[i].team == team) {%>
       <tr>
-        <td><a <% if (!server.players[i].aibot) {%>href="/profile/?pid=<%=server.players[i].pid%>" <%}%> class="my-2 text-decoration-none link-light col-auto" ><%=server.players[i].tag + server.players[i].name%></a><%if(server.players[i].aibot) {%><div class="rounded-pill badge bg-red" >БОТ</div><%}%><span id="pid<%=server.players[i].pid%>"></span></td>
+        <td><a <% if (!server.players[i].aibot) {%>href="/profile/?pid=<%=server.players[i].pid%>&lang=<%=lang%>" <%}%> class="my-2 text-decoration-none link-light col-auto" ><%=server.players[i].tag + server.players[i].name%></a><%if(server.players[i].aibot) {%><div class="rounded-pill badge bg-red" ><%=translation.SERVER_BOT%></div><%}%><span id="pid<%=server.players[i].pid%>"></span></td>
         <td><%=server.players[i].score%></td>
         <td><%=server.players[i].kills%></td>
         <td><%=server.players[i].deaths%></td>
@@ -71,20 +71,20 @@ function parseTeam(team) {
             <div class="col-12 col-lg-8 row align-items-center">
               <p class="mb-1 text-decoration-none link-light col-12 fs-3 mr-2"><%=server.name%><span class=" rounded-pill badge bg-red"><%=server.numPlayers%>/<%=server.maxPlayers%></span></p>
               <h4 class="mb-1 text-decoration-none link-light col-12"><%=server.sponsorText%></h4>
-              <h5 class="col-12">Карта: <%=server.mapName%><%=parseMode(server.gameType)%></h5>
+              <h5 class="col-12"><%=translation.MAIN_MAP%>: <%=server.mapName%><%=parseMode(server.gameType)%></h5>
               <h6 class="col-12"><%=server.ip + ':' + server.port%></h6>
               <div class="row align-items-center mb-2">
-                <img class="bd-placeholder-img col-auto" data-toggle="tooltip" data-bs-html="true" title="Данный сервер <%if (!server.ranked) {%>не<%}%> ранговый" width="16" height="16" src="/assets/img/<%if (!server.ranked) {%>un<%}%>ranked.png"/>
-                <%if (server.anticheat) {%><img class="bd-placeholder-img col-auto" data-toggle="tooltip" data-bs-html="true" title="На данном сервере включен античит" width="16" height="16" src="/assets/img/pb.png"/><%}%>
-                <i data-toggle="tooltip" data-bs-html="true" title="На данном сервере <%if (!server.password) {%>нет пароля<%} else {%>есть пароль<%}%>" class="mx-1 bi bi-<%if (!server.password) {%>un<%}%>lock-fill col-auto d-flex"></i>
-                <i data-toggle="tooltip" data-bs-html="true" title="На данном сервере <%if (!server.voip) {%>нет VoIP<%} else {%>есть VoIP<%}%>" class="mx-1 bi bi-mic-<%if (!server.voip) {%>mute-<%}%>fill col-auto d-flex"></i>
-                <i data-toggle="tooltip" data-bs-html="true" title="На данном сервере <%if (!server.battlerecorder) {%>выключен Battlerecorder<%} else {%>включен Battlerecorder<%}%>" class="mx-1 bi bi-camera-video-<%if (!server.battlerecorder) {%>off-<%}%>fill col-auto d-flex"></i>
+                <img class="bd-placeholder-img col-auto" data-toggle="tooltip" data-bs-html="true" title="<%if (server.ranked) {%> <%=translation.SERVER_RANKED%><%} else {%><%=translation.SERVER_UNRANKED%><%}%>" width="16" height="16" src="/assets/img/<%if (!server.ranked) {%>un<%}%>ranked.png"/>
+                <%if (server.anticheat) {%><img class="bd-placeholder-img col-auto" data-toggle="tooltip" data-bs-html="true" title="<%if (server.anticheat) {%><%=translation.SERVER_ANTICHEAT%><%} else {%><%=translation.SERVER_NOANTICHEAT%><%}%>" width="16" height="16" src="/assets/img/pb.png"/><%}%>
+                <i data-toggle="tooltip" data-bs-html="true" title="<%if (server.password) {%><%=translation.SERVER_PASSWORD%><%} else {%><%=translation.SERVER_NOPASSWORD%><%}%>" class="mx-1 bi bi-<%if (!server.password) {%>un<%}%>lock-fill col-auto d-flex"></i>
+                <i data-toggle="tooltip" data-bs-html="true" title="<%if (server.voip) {%><%=translation.SERVER_VOIP%><%} else {%><%=translation.SERVER_NOVOIP%><%}%>" class="mx-1 bi bi-mic-<%if (!server.voip) {%>mute-<%}%>fill col-auto d-flex"></i>
+                <i data-toggle="tooltip" data-bs-html="true" title="<%if (server.battlerecorder) {%><%=translation.SERVER_BATTLERECORDER%><%} else {%><%=translation.SERVER_NOBATTLERECORDER%><%}%>" class="mx-1 bi bi-camera-video-<%if (!server.battlerecorder) {%>off-<%}%>fill col-auto d-flex"></i>
               </div>
             </div>
             <div class="col-12 col-lg-4 row py-3">
               <div class="fs-4 align-items-center">
-                <a href="<%=server.joinLink%>" data-toggle="tooltip" data-bs-html="true" title="Для игры нужен <a class='text-light' target='_blank' href='https://joinme.click/'>joinme.click</a>" class="my-2 col-auto btn btn-success <%if (!server.joinLink) {%>disabled<%}%>"><i class="mx-1 bi bi-play-fill"></i>Присоединиться</a>
-                <a target="_blank" href="<%=server.demoIndex%>" class="my-2 col-auto btn btn-success <%if (!server.demoIndex || server.demoIndex == 'http://' || server.demoIndex == 'https://') {%>disabled<%}%>"><i class="mx-1 bi bi-camera-video-fill"></i>Демо</a>
+                <a href="<%=server.joinLink%>" data-toggle="tooltip" data-bs-html="true" title="<%=translation.SERVER_JOINTOOLTIP%>" class="my-2 col-auto btn btn-success <%if (!server.joinLink) {%>disabled<%}%>"><i class="mx-1 bi bi-play-fill"></i><%=translation.SERVER_JOIN%></a>
+                <a target="_blank" href="<%=server.demoIndex%>" class="my-2 col-auto btn btn-success <%if (!server.demoIndex || server.demoIndex == 'http://' || server.demoIndex == 'https://') {%>disabled<%}%>"><i class="mx-1 bi bi-camera-video-fill"></i><%=translation.SERVER_DEMO%></a>
                 <a id="fav" class="my-2 col-auto align-items-center"></a>
                 <script type="text/babel">
                   const fav = document.getElementById('fav');
@@ -140,11 +140,11 @@ function parseTeam(team) {
                 <table class="table table-sm text-light table-bg">
                 <thead class="table-head-bg">
                 <tr>
-                  <th scope="col"><div class="d-none d-lg-flex">Ник</div></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Очки</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/score.png"/></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Убийств</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/kills.png"/></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Смертей</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/deaths.png"/></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Пинг</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ping.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex"><%=translation.SERVER_NICKNAME%></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_SCORE%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/score.png"/></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_KILLS%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/kills.png"/></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_DEATHS%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/deaths.png"/></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_PING%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ping.png"/></div></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -157,11 +157,11 @@ function parseTeam(team) {
                 <table class="table table-sm text-light table-bg">
                 <thead class="table-head-bg">
                 <tr>
-                  <th scope="col"><div class="d-none d-lg-flex">Ник</div></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Очки</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/score.png"/></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Убийств</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/kills.png"/></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Смертей</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/deaths.png"/></th>
-                  <th scope="col"><div class="d-none d-lg-flex">Пинг</div><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ping.png"/></th>
+                  <th scope="col"><div class="d-none d-lg-flex"><%=translation.SERVER_NICKNAME%></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_SCORE%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/score.png"/></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_KILLS%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/kills.png"/></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_DEATHS%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/deaths.png"/></div></th>
+                  <th scope="col"><div class="d-none d-lg-flex row"><%=translation.SERVER_PING%><img class="bd-placeholder-img col-auto" width="20" height="20" src="/assets/img/ping.png"/></div></th>
                 </tr>
                 </thead>
                 <tbody>
