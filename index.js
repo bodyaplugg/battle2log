@@ -164,7 +164,7 @@ app.use(function(req,res){
 });
 
 app.listen(port);
-console.log('Сервер запущен на порте: ' + port);
+console.log('server has been started on port: ' + port);
 
 function sortPlayersDown(arr) {
     for (var i = 0, endI = arr.length - 1; i < endI; i++) {
