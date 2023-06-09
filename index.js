@@ -15,7 +15,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.use(i18n({
   translationsPath: path.join(__dirname, 'locales'),
-  siteLangs: ["en","ru"],
+  siteLangs: ["en"],
   paramLangName: 'lang',
   defaultLocale: 'en',
   textsVarName: 'translation'
